@@ -32,14 +32,14 @@ jobs:
       - name: "Set up Cloud SDK"
         uses: "google-github-actions/setup-gcloud@v2"
 
-      - name: "Use gcloud CLI"
-        run: "gcloud info"
-
       - name: "Build docker image and push"
-        run: "gcloud builds submit --tag us-central1-docker.pkg.dev/project-notely/notely-ar-repo/notely:latest ."
+        run: gcloud builds submit --tag us-central1-docker.pkg.dev/project-notely/notely-ar-repo/notely:latest .
+
+      - name: Install goose
+        run: go install github.com/pressly/goose/v3/cmd/goose@latest
 
       - name: "Database Migration"
-        run: "./scripts/migrateup.sh"
+        run: ./scripts/migrateup.sh
 
       - name: Deploy to Cloud Run
         run: gcloud run deploy notely --image us-central1-docker.pkg.dev/project-notely/notely-ar-repo/notely:latest --region us-central1 --allow-unauthenticated --project project-notely --max-instances=4
